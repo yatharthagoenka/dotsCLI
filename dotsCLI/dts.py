@@ -3,6 +3,8 @@ import yaml
 import click 
 import shutil
 
+from config import settings
+
 @click.group()
 def cli():
     """
@@ -13,26 +15,25 @@ def cli():
 
 @cli.command()
 @click.option(
-    '--external',
-    '-e',
+    '--address',
+    '-a',
+    type=click.STRING,
+    required=True,
+    help="Public IP of the remote server"
+)
+@click.option(
+    '--conf-nginx',
+    '-cf',
     type=click.Choice(["yes", "no"]),
     default="no",
-    help="Remove external networks and volumes"
+    help="Install and configure nginx"
 )
-def cleanup(external):
+def frontend(address, conf_nginx):
     """
-    Deletes docker images, containers and removes related files
+    Deploy frontend app to remote server
     """
-    if external == "yes":
-        os.system("docker compose down --volumes")
-    else:
-        os.system("docker compose down")
-    click.echo("Cleaned all containers and services, deleting dockerfiles...")
-    cleanup_files = ["dockerfile", "docker-compose.yml", ".dockerignore"]
-    for file in cleanup_files:
-        if os.path.isfile(file):
-            os.remove(file)
-            print(f"Deleted file: {file}")
+    click.echo(f"deploying frontend to remote {address}")
+    click.echo(f"{settings.AWS_USER}")
 
 
 @cli.command()
@@ -43,13 +44,13 @@ def cleanup(external):
     required=True,
     help="Base image for docker container",
 )
-def init(base):
+def dockerize(base):
     """
     Setup configurations files for docker
     """
     click.echo(f"Building container with env: {base}")
     if base == "node":
-        build_node()
+        dockerize_node()
         build_flag = input("Dockerfiles configured. Do you want to build the image? (y/N): ")
         if build_flag.lower() == "y":
             os.system(f"docker-compose build")
@@ -57,7 +58,7 @@ def init(base):
         click.echo("Base image not supported")
 
 
-def build_node():
+def dockerize_node():
     project_dir = os.getcwd()
     try:
         dockerfile_config = node_dockerfile_input()

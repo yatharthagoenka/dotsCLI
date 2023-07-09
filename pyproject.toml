@@ -1,12 +1,15 @@
 [tool.poetry]
-name = "dockerizer"
+name = "dockrizer"
 version = "0.1.0"
 description = "A command line interface for automating containerization"
 authors = ["Yathartha Goenka <goenkayathartha2002@gmail.com>"]
 readme = "README.md"
+packages = [
+    { include = "dockrizer" },
+]
 
 [tool.poetry.scripts]
-dts = "dockerizer.dts:cli"
+dts = "dockrizer.dts:cli"
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -3,6 +3,8 @@ A command-line tool to dockerize your applications in a jiffy.
 
 > Supported enviroments: Node
 
+PyPI: https://pypi.org/project/dockrizer/
+
 <br>
 
 ## Installation

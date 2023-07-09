@@ -3,7 +3,7 @@ import yaml
 import click 
 import shutil
 
-from config import settings
+from dotsCLI.config import settings
 
 @click.group()
 def cli():
@@ -27,6 +27,13 @@ def cli():
     type=click.Choice(["yes", "no"]),
     default="no",
     help="Install and configure nginx"
+)
+@click.option(
+    '--build',
+    '-bu',
+    type=click.Choice(["yes", "no"]),
+    default="no",
+    help="Build frontend app before deployment"
 )
 def frontend(address, conf_nginx):
     """

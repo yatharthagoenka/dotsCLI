@@ -9,7 +9,7 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-dts = "dockrizer.dts:cli"
+dts = "dotsCLI.dts:cli"
 
 [tool.poetry.dependencies]
 python = "^3.8"

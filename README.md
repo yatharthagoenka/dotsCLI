@@ -14,6 +14,19 @@ pip install dotsCLI
 ```
 dts
 ```
+3. Make a config file in a new folder named '.dts' in the root directory of your system, configuring the values respectively.
+
+> Note: `FRONTEND_DIR_PATH` and `FRONTEND_DIST_PATH` must not contain a trailing slash.
+
+```bash
+[aws]
+AWS_USER=ubuntu
+
+[main]
+FRONTEND_DIR_PATH=<path_to_dir>
+FRONTEND_DIST_PATH=<path_to_dir>
+SSH_KEY_PATH=<path_to_dir>/ssh-key.pem
+```
 
 ## Functions
 1. Easily deploy your frontend SPAs to remote linux servers

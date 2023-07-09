@@ -6,7 +6,7 @@ import shutil
 @click.group()
 def cli():
     """
-    Try `dts {command-name} --help for more help
+    Try `dts {command-name} --help` for more help
     """
     pass
 
@@ -61,8 +61,12 @@ def build_node():
         network_name = user_config['network_name']
         service_name = user_config['service_name']
         
-        click.echo(f"\nCreating a new bridge network: {network_name}")
-        # os.system(f"docker network create {network_name}")
+        try:
+            click.echo(f"\nCreating a new bridge network: {network_name}")
+            os.system(f"docker network create {network_name}")
+            click.echo(f"Network {network_name} created. Check network stats using `docker network inspect {network_name}`\n")
+        except Exception as e:
+            click.echo(f"Error creating network: {e}")
         
         dockercompose_path = project_dir+"/docker-compose.yml"
         shutil.copyfile(os.path.join(os.path.dirname(__file__), './samples/docker-compose.yml'), dockercompose_path)
@@ -82,6 +86,8 @@ def build_node():
 
         with open(dockercompose_path, 'w') as file:
             yaml.dump(config_file, file, sort_keys=False)
+        click.echo("docker-compose.yml created.\n")
+
     except Exception as e:
         click.echo(f"Error creating docker-compose.yml: {e}")
 

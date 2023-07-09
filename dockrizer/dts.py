@@ -12,11 +12,27 @@ def cli():
 
 
 @cli.command()
-def cleanup():
+@click.option(
+    '--external',
+    '-e',
+    type=click.Choice(["yes", "no"]),
+    default="no",
+    help="Remove external networks and volumes"
+)
+def cleanup(external):
     """
-    Deletes docker images/containers and removes related files
+    Deletes docker images, containers and removes related files
     """
-    click.echo("Temporarily not implemented")
+    if external == "yes":
+        os.system("docker compose down --volumes")
+    else:
+        os.system("docker compose down")
+    click.echo("Cleaned all containers and services, deleting dockerfiles...")
+    cleanup_files = ["dockerfile", "docker-compose.yml", ".dockerignore"]
+    for file in cleanup_files:
+        if os.path.isfile(file):
+            os.remove(file)
+            print(f"Deleted file: {file}")
 
 
 @cli.command()
@@ -29,11 +45,14 @@ def cleanup():
 )
 def init(base):
     """
-    Initialize CLI by choosing env
+    Setup configurations files for docker
     """
     click.echo(f"Building container with env: {base}")
     if base == "node":
-       build_node()
+        build_node()
+        build_flag = input("Dockerfiles configured. Do you want to build the image? (y/N): ")
+        if build_flag.lower() == "y":
+            os.system(f"docker-compose build")
     else:
         click.echo("Base image not supported")
 
@@ -110,7 +129,7 @@ def node_dockerfile_input():
     """
     click.echo(default_config_prompt)
     default_flag = input("Do you want to use the default configuration? (Y/N)")
-    if default_flag == "N" or default_flag == "n":
+    if default_flag.lower() == "n":
         click.echo("\nEdit docker configurations:\nHit 'Enter' to select default values")
         user_input = input("Version [latest]: ")
         if not user_input == "":
@@ -152,7 +171,7 @@ def node_dockercompose_input(local_port, container_port):
     service_name = "app"
     image_name = "app_image"
     container_name = "app_1"
-    user_input = input("Version [3]: ")
+    user_input = input("Compose File Version [3]: ")
     if not user_input == "":
         version = user_input
     user_input = input("Network [app-net]: ")

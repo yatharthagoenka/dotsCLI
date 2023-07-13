@@ -1,7 +1,7 @@
 import os
 from configparser import RawConfigParser
 
-HOME_DIR = os.path.expanduser('~')
+HOME_DIR = os.path.expanduser("~")
 
 CONFIG_FILE = os.path.join(HOME_DIR, ".dts", "config")
 config = RawConfigParser()

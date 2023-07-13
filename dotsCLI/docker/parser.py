@@ -1,8 +1,9 @@
 import click
 
+
 def node_dockerfile_input():
     """
-    Setup dockerfile for Node
+    Setup dockerfile for Node.
     """
     version = "latest"
     working_dir = "/app"
@@ -19,7 +20,9 @@ def node_dockerfile_input():
     click.echo(default_config_prompt)
     default_flag = input("Do you want to use the default configuration? (Y/N)")
     if default_flag.lower() == "n":
-        click.echo("\nEdit docker configurations:\nHit 'Enter' to select default values")
+        click.echo(
+            "\nEdit docker configurations:\nHit 'Enter' to select default values"
+        )
         user_input = input("Version [latest]: ")
         if not user_input == "":
             version = user_input
@@ -50,9 +53,10 @@ def node_dockerfile_input():
         "run_script": run_script,
     }
 
+
 def node_dockercompose_input(local_port, container_port):
     """
-    Setup docker-compose.yml for Node
+    Setup docker-compose.yml for Node.
     """
     click.echo("Creating docker-compose.yml\nHit 'Enter' to select default values:\n")
     version = 3
@@ -85,6 +89,6 @@ def node_dockercompose_input(local_port, container_port):
             "ports": [f"{local_port}:{container_port}"],
             "environment": [f"PORT={container_port}"],
             "networks": [network],
-        }
+        },
     }
     return dockercompose_values

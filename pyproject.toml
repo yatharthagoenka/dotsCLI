@@ -10,12 +10,27 @@ packages = [
 
 [tool.poetry.scripts]
 dts = "dotsCLI.dts:cli"
+formatter = "formatters:formatter"
+check = "formatters:check"
 
 [tool.poetry.dependencies]
 python = "^3.8"
 click = "^8.1.4"
 PyYAML = "^6.0"
 paramiko = "^3.2.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+docformatter = "^1.5.1"
+
+[tool.docformatter]
+profile="black"
+recursive = true
+wrap-summaries = 150
+wrap-descriptions = 150
+pre-summary-newline = true
+close-quotes-on-newline = true
+make-summary-multi-line = true
 
 [build-system]
 requires = ["poetry-core"]

@@ -17,6 +17,44 @@ def cli():
 
 @cli.command()
 @click.option(
+    "--address",
+    "-a",
+    required=True,
+    help="Public IP of the remote machine to connect",
+)
+def remote_ssh(address):
+    """
+    Launch a session of remote machine on local
+    """
+    ssh_pem_file_path = os.path.join(
+        settings.SSH_DIRECTORY, os.path.basename(settings.PEM_KEY_PATH)
+    )
+    if not os.path.exists(ssh_pem_file_path):
+        os.system(
+            f"cp {settings.PEM_KEY_PATH} {settings.SSH_DIRECTORY}"
+        )
+        click.echo("Added PEM key to SSH directory")
+    else:   
+        print("The PEM key already exists in the SSH directory, skipping.")
+
+    host_configuration = [
+        f"\nHost {address}\n",
+        f"  HostName {address}\n",
+        "  User ubuntu\n",
+        f'  IdentityFile "{ssh_pem_file_path}"\n'
+    ]
+    with open(f"{settings.SSH_DIRECTORY}/config", 'r') as file:
+        ssh_config_file = file.readlines()
+    if not any(host_configuration[0].strip() == line.strip() for line in ssh_config_file):
+        with open(f"{settings.SSH_DIRECTORY}/config", 'a') as file:
+            file.writelines(host_configuration)
+    click.echo("Added host to SSH config.\nConnecting to remote server...")
+
+    os.system(f"code --folder-uri vscode-remote://ssh-remote+{address}/home/ubuntu/")
+
+
+@cli.command()
+@click.option(
     '--address',
     '-a',
     type=click.STRING,
